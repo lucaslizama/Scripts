@@ -5,7 +5,6 @@ public class Cangrejo : MonoBehaviour
 {
 
     public float velocidad;
-    public float delayDisparo;
     public int vida;
     public int behaveNumber;
     public GameObject spike;
@@ -24,14 +23,19 @@ public class Cangrejo : MonoBehaviour
         contador = 0;
     }
 
+    void Update()
+    {
+        
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
-        //Declaramos que la velocidad en x del cangrejo sera siempre la varible velocidad
+
         rigidbody2D.velocity = new Vector2(velocidad, rigidbody2D.velocity.y);
 
         //Enviamos el valor de la velocidad al animador
-        anim.SetFloat("speed", velocidad);
+        anim.SetFloat("speed", rigidbody2D.velocity.x);
 
         //Si la velocidad es negativa espejamos al cangrejo	
         if (velocidad < 0f)
@@ -52,21 +56,6 @@ public class Cangrejo : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        spikeRotationAngle = calculaAngulo();
-
-        if (behaveNumber == 1)
-        {
-            StartCoroutine("shooting",delayDisparo);
-            
-            print(contador);
-            if (contador == 9)
-            {
-                behaveNumber = 0;
-                contador = 0;
-            }
-            
-        }
         
     }
 
@@ -81,23 +70,25 @@ public class Cangrejo : MonoBehaviour
 
     }
 
-    //Metodo que dispara a intervalos un objeto spike.
-    IEnumerator shooting(float time)
+
+    public void moveRight()
     {
-        yield return new WaitForSeconds(time);
-        Instantiate(spike, spikeSpwan.position, Quaternion.Euler(0f, 0f, spikeRotationAngle));
-        contador++;
-        StopCoroutine("shooting");
+        velocidad = 2f;
+    }
+
+    public void moveLeft()
+    {
+        velocidad = -2f;
     }
 
     //Metodo que calcula el angulo entre cangrejo y jugador.
-    public float calculaAngulo()
+    public float calculaAngulo(GameObject obj)
     {
 
         GameObject jugador = GameObject.Find("Jugador");
-        GameObject cangrejo = gameObject;
-        float deltax = jugador.transform.position.x - cangrejo.transform.position.x;
-        float deltay = jugador.transform.position.y - cangrejo.transform.position.y;
+        GameObject objeto = obj;
+        float deltax = jugador.transform.position.x - objeto.transform.position.x;
+        float deltay = jugador.transform.position.y - objeto.transform.position.y;
 
         return (Mathf.Atan2(deltay, deltax) * Mathf.Rad2Deg);
     }

@@ -2,6 +2,9 @@
 Thumbs.db
 ehthumbs.db
 
+#Unity files
+*.meta
+
 # Folder config file
 Desktop.ini
 

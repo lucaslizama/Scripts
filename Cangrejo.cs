@@ -69,6 +69,8 @@ public class Cangrejo : MonoBehaviour
         
     }
 
+    //Metodo que es llamado una sola vez cuando un colider entra en la 
+    //zona trigger del cangrejo.
     void OnTriggerEnter2D(Collider2D bala)
     {
         if (bala.tag == "bullet")
@@ -79,6 +81,11 @@ public class Cangrejo : MonoBehaviour
             behaveNumber = 1;
         }
 
+    }
+
+    void OnBecameVisible()
+    {
+        behaveNumber = 2;
     }
 
     public void moveRight()
@@ -94,9 +101,13 @@ public class Cangrejo : MonoBehaviour
     public IEnumerator flash()
     {
         spriteColor.a = 0.78f;
+        spriteColor.b = 0f;
+        spriteColor.g = 0f;
         GetComponent<SpriteRenderer>().color = spriteColor;
         yield return new WaitForSeconds(0.1f);
         spriteColor.a = 1f;
+        spriteColor.b = 1f;
+        spriteColor.g = 1f;
         GetComponent<SpriteRenderer>().color = spriteColor;
         StopCoroutine("flash");
     }

@@ -14,6 +14,7 @@ public class Cangrejo : MonoBehaviour
     private Transform espinaSpawn;
     private float spikeRotationAngle;
     private int contador;
+    private Color spriteColor;
 
 
     // Use this for initialization
@@ -21,6 +22,7 @@ public class Cangrejo : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         contador = 0;
+        spriteColor = GetComponent<SpriteRenderer>().color;
     }
 
     void Update()
@@ -31,7 +33,6 @@ public class Cangrejo : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
         rigidbody2D.velocity = new Vector2(velocidad, rigidbody2D.velocity.y);
 
         //Enviamos el valor de la velocidad al animador
@@ -51,6 +52,15 @@ public class Cangrejo : MonoBehaviour
             anim.SetTrigger("Stop");
         }
 
+        //Comportamientos segun behaveNumber.
+
+        if (behaveNumber == 1)
+        {
+            StartCoroutine("flash");
+            behaveNumber = 0;
+        }
+
+
         //Destruimos al cangrejo si su vida llega a 0
         if (vida == 0)
         {
@@ -66,10 +76,10 @@ public class Cangrejo : MonoBehaviour
             bullet disparo = bala.GetComponent<bullet>();
             disparo.hit = true;
             vida = vida - 1;
+            behaveNumber = 1;
         }
 
     }
-
 
     public void moveRight()
     {
@@ -79,6 +89,16 @@ public class Cangrejo : MonoBehaviour
     public void moveLeft()
     {
         velocidad = -2f;
+    }
+
+    public IEnumerator flash()
+    {
+        spriteColor.a = 0.78f;
+        GetComponent<SpriteRenderer>().color = spriteColor;
+        yield return new WaitForSeconds(0.1f);
+        spriteColor.a = 1f;
+        GetComponent<SpriteRenderer>().color = spriteColor;
+        StopCoroutine("flash");
     }
 
     //Metodo que calcula el angulo entre cangrejo y jugador.

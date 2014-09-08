@@ -7,11 +7,17 @@ public class Medusa : MonoBehaviour
     public float medusaSpeed;
     public int behaveIDX;
     public GameObject[] bloodSpawns;
+	public GameObject jugador;
+
     private Animator anim;
     private BoxCollider2D caja;
     private CircleCollider2D circulo;
     private Color medusaColor;
     private int spawnNumber;
+	private float deltaX;
+	private float deltaY;
+	private float angulo;
+	private Vector3 rotacion;
 
 
     // Use this for initialization
@@ -21,6 +27,10 @@ public class Medusa : MonoBehaviour
         caja = GetComponentInChildren<BoxCollider2D>();
         circulo = GetComponentInChildren<CircleCollider2D>();
         medusaColor = GetComponent<SpriteRenderer>().color;
+		jugador = GameObject.Find("Jugador");
+		deltaX = 0f;
+		deltaY = 0f;
+		rotacion = Vector3.zero;
     }
 
     void FixedUpdate()
@@ -35,6 +45,18 @@ public class Medusa : MonoBehaviour
             StartCoroutine("flash");
             behaveIDX = 0;
         }
+
+		deltaX = jugador.transform.position.x - transform.position.x;
+		deltaY = jugador.transform.position.y - transform.position.y;
+
+		angulo = Mathf.Atan2(deltaY,deltaX) * Mathf.Rad2Deg;
+
+		rotacion = new Vector3(0f,0f,(angulo - 90f));
+
+		transform.rotation = Quaternion.Euler(rotacion);
+
+		print (angulo + "| " + deltaX + "| " + deltaY);
+
 
 
     }
@@ -91,6 +113,7 @@ public class Medusa : MonoBehaviour
         circulo.enabled = false;
         anim.SetTrigger("Death");
     }
+
 
     void destruir()
     {

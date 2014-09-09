@@ -38,19 +38,25 @@ public class Medusa : MonoBehaviour
 
     void FixedUpdate()
     {
-        angulo = calculaAngulo();
-        rotarMedusa();
+        
 
-
-        if (hp <= 0)
+        if (swim == false)
         {
-            morir();
+            angulo = calculaAngulo();
+            rotarMedusa();
         }
 
         if (swim == true)
         {
             avanzar();
         }
+
+        if (hp <= 0)
+        {
+            morir();
+        }
+
+        
 
         if (recieveDamage == true)
         {
@@ -100,14 +106,11 @@ public class Medusa : MonoBehaviour
     private void swimFalse()
     {
         swim = false;
+        rigidbody2D.velocity = Vector3.zero;
     }
 
     private void avanzar()
     {
-        
-        deltaX = jugador.transform.position.x - transform.position.x;
-        deltaY = jugador.transform.position.y - transform.position.y;
-
         rigidbody2D.velocity = new Vector2(Mathf.Cos(angulo - 90f) * intensidadNado,Mathf.Sin(angulo - 90f) * intensidadNado);
     }
 

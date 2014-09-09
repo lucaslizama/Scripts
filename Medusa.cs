@@ -4,8 +4,9 @@ using System.Collections;
 public class Medusa : MonoBehaviour
 {
     public int hp;
-    public float medusaSpeed;
-    public int behaveIDX;
+    public bool recieveDamage;
+    public bool swim;
+    public float intensidadNado;
     public GameObject[] bloodSpawns;
 	public GameObject jugador;
 
@@ -17,6 +18,7 @@ public class Medusa : MonoBehaviour
 	private float deltaX;
 	private float deltaY;
 	private float angulo;
+    private float timer;
 	private Vector3 rotacion;
 
 
@@ -30,34 +32,33 @@ public class Medusa : MonoBehaviour
 		jugador = GameObject.Find("Jugador");
 		deltaX = 0f;
 		deltaY = 0f;
+        angulo = calculaAngulo();
 		rotacion = Vector3.zero;
     }
 
     void FixedUpdate()
     {
+        angulo = calculaAngulo();
+        rotarMedusa();
+
+
         if (hp <= 0)
         {
             morir();
         }
 
-        if (behaveIDX == 1)
+        if (swim == true)
         {
-            StartCoroutine("flash");
-            behaveIDX = 0;
+            avanzar();
         }
 
-		deltaX = jugador.transform.position.x - transform.position.x;
-		deltaY = jugador.transform.position.y - transform.position.y;
+        if (recieveDamage == true)
+        {
+            StartCoroutine("flash");
+            recieveDamage = false;
+        }
 
-		angulo = Mathf.Atan2(deltaY,deltaX) * Mathf.Rad2Deg;
-
-		rotacion = new Vector3(0f,0f,(angulo - 90f));
-
-		transform.rotation = Quaternion.Euler(rotacion);
-
-		print (angulo + "| " + deltaX + "| " + deltaY);
-
-
+        
 
     }
 
@@ -77,7 +78,7 @@ public class Medusa : MonoBehaviour
         {
             if (objeto.gameObject.name == "bullet(Clone)")
             {
-                behaveIDX = 1;
+                recieveDamage = true;
                 hp = hp - 1;
                 bullet bala = objeto.gameObject.GetComponent<bullet>();
                 bala.hit = true;
@@ -89,8 +90,41 @@ public class Medusa : MonoBehaviour
                 }
             }
         }
+    }
 
+    private void swimTrue()
+    {
+        swim = true;
+    }
 
+    private void swimFalse()
+    {
+        swim = false;
+    }
+
+    private void avanzar()
+    {
+        
+        deltaX = jugador.transform.position.x - transform.position.x;
+        deltaY = jugador.transform.position.y - transform.position.y;
+
+        rigidbody2D.velocity = new Vector2(Mathf.Cos(angulo - 90f) * intensidadNado,Mathf.Sin(angulo - 90f) * intensidadNado);
+    }
+
+    private void rotarMedusa()
+    {
+        rotacion = new Vector3(0f, 0f, (angulo - 90f));
+        transform.rotation = Quaternion.Euler(rotacion);
+    }
+
+    private float calculaAngulo()
+    {
+        deltaX = jugador.transform.position.x - transform.position.x;
+        deltaY = jugador.transform.position.y - transform.position.y;
+
+        angulo = Mathf.Atan2(deltaY, deltaX) * Mathf.Rad2Deg;
+
+        return angulo;
     }
 
     public IEnumerator flash()

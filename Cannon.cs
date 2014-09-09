@@ -53,9 +53,6 @@ public class Cannon : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		//print (transform.rotation.eulerAngles.z);
-
-
 		//Este bloque controla la posicion del Mouse respecto del cañon
 		cannonTip = GameObject.Find("Cannon_Tip");
         mousePos = Input.mousePosition;

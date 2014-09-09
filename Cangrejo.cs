@@ -13,7 +13,6 @@ public class Cangrejo : MonoBehaviour
     private Animator anim;
     private Transform espinaSpawn;
     private float spikeRotationAngle;
-    private int contador;
     private Color spriteColor;
 
 
@@ -21,7 +20,6 @@ public class Cangrejo : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-        contador = 0;
         spriteColor = GetComponent<SpriteRenderer>().color;
     }
 
